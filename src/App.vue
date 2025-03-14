@@ -1,4 +1,7 @@
 <script>
+import { computed } from "vue";
+import AppForm from "./components/AppForm.vue";
+import AppRezume from "./components/AppRezume.vue";
 export default {
   data() {
     return {
@@ -22,44 +25,69 @@ export default {
       ],
       tp: "h1",
       area: "",
+      date: [],
+      comments: [
+        { id: 1, value: "comment 1" },
+        { id: 2, value: "comment 2" },
+        { id: 3, value: "comment 3" },
+        { id: 4, value: "comment 4" },
+        { id: 5, value: "comment 5" },
+        { id: 6, value: "comment 6" },
+        { id: 7, value: "comment 7" },
+        { id: 8, value: "comment 8" },
+        { id: 9, value: "comment 9" },
+        { id: 10, value: "comment 10" },
+        { id: 11, value: "comment 11" },
+        { id: 12, value: "comment 12" },
+      ],
+      load: false,
     };
   },
   methods: {
     handleSubmit() {
+      this.date.push({
+        tupe: this.tp,
+        are: this.area,
+      });
+      console.log(this.date);
       this.tp = "h1";
       this.area = "";
     },
   },
+  computed: {
+    valiadateForm() {
+      return this.area.length > 3;
+    },
+  },
+
+  components: { AppForm, AppRezume },
 };
 </script>
 
 <template>
   <div class="container">
-    <form class="item1" @submit.prevent="handleSubmit">
-      <label for="type">Тип блока</label>
-      <select id="tp" v-model="tp">
-        <option v-for="opt in options" :value="opt.value">
-          {{ opt.text }}
-        </option>
-      </select>
-      <label for="znach">Значение</label>
-      <textarea name="zn" id="znach" v-model="area"></textarea>
-      <button class="btn" type="submit">Отправить</button>
-    </form>
-    <div class="item2"></div>
+    <AppForm
+      @submit="handleSubmit"
+      v-model:type="tp"
+      v-model:aria="area"
+      :option="options"
+      :isEnable="valiadateForm"
+      @load="load = true"
+    ></AppForm>
+    <div class="item2">
+      <AppRezume :date="date"></AppRezume>
+    </div>
+  </div>
+  <div v-if="load" class="container1">
+    <h1>Комментарии</h1>
+    <div class="inf" v-for="com in comments">
+      <span>{{ com.id }}:</span>
+      <span>{{ com.value }}</span>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.btn {
-  padding: 6px;
-  margin: 6px;
-  font-size: 15px;
-  border: none;
-  border-radius: 7px;
-  color: white;
-  background-color: rgb(43, 42, 42);
-}
 .container {
   display: flex;
   gap: 50px;
@@ -70,22 +98,8 @@ export default {
   height: 800px;
   border-radius: 10px;
 }
-.item1 {
-  flex: 0.35;
-  display: flex;
-  flex-direction: column;
-  margin-top: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  height: 50%;
-  border-radius: 10px;
-  padding: 7px;
-}
-label {
-  margin-top: 30px;
-  font-size: 20px;
-}
 .item2 {
-  flex: 0.5;
+  flex: 0.6;
   display: flex;
   flex-direction: column;
   margin-top: 20px;
@@ -96,33 +110,30 @@ label {
   padding: 7px;
   overflow-y: scroll;
 }
-textarea {
-  width: 100%;
-  height: 150px;
-  color: black;
+.container1 {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+  background-color: rgb(248, 248, 245);
+  height: 500px;
   border-radius: 10px;
-  margin: auto;
-  outline: none;
-  border: none;
-  resize: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-select {
   width: 100%;
-  color: black;
-  border-radius: 3px;
-  margin: auto;
-  outline: none;
-  border: none;
-  resize: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  background-color: white;
-  padding: 5px;
-  font-size: 15px;
-  border-radius: 6px;
+  overflow-y: scroll;
 }
-option {
-  font-size: 15px;
-  background-color: white;
+.inf {
+  width: 70%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  height: 300px;
+  border-radius: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-left: 30px;
+  padding: 20px;
+  margin-top: 10px;
+}
+h1 {
+  text-align: center;
 }
 </style>
